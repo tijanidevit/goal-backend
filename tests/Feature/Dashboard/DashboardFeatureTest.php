@@ -28,7 +28,7 @@ class DashboardFeatureTest extends TestCase
 
         $goal = Goal::factory()->create([
             'user_id' => $user->id,
-            'category' => 'Relocation',
+            'category' => 'travel',
             'name' => 'Move',
             'target_amount' => 1000,
             'target_date' => now()->addMonths(10)->format('Y-m-d'),

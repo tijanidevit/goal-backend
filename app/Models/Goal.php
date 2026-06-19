@@ -2,6 +2,8 @@
 
 namespace App\Models;
 
+use App\Enums\EnumGoalCategory;
+use App\Enums\EnumGoalStatus;
 use Illuminate\Database\Eloquent\Concerns\HasUuids;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
@@ -31,6 +33,8 @@ class Goal extends Model
             'target_amount' => 'decimal:2',
             'target_date' => 'date',
             'is_primary' => 'boolean',
+            'category' => EnumGoalCategory::class,
+            'status' => EnumGoalStatus::class,
         ];
     }
 

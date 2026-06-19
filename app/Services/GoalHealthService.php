@@ -2,6 +2,9 @@
 
 namespace App\Services;
 
+use App\Enums\EnumGoalHealth;
+use App\Enums\EnumGoalHealthLabel;
+
 class GoalHealthService
 {
     /**
@@ -16,28 +19,28 @@ class GoalHealthService
         if ($requiredMonthlySavings <= 0) {
             // Already achieved or no savings required
             return [
-                'status' => 'green',
-                'label' => 'On Track'
+                'status' => EnumGoalHealth::GREEN->value,
+                'label' => EnumGoalHealthLabel::ON_TRACK->value
             ];
         }
 
         if ($availableMonthlySavings >= $requiredMonthlySavings * 1.05) {
             return [
-                'status' => 'green',
-                'label' => 'On Track'
+                'status' => EnumGoalHealth::GREEN->value,
+                'label' => EnumGoalHealthLabel::ON_TRACK->value
             ];
         }
 
         if ($availableMonthlySavings >= $requiredMonthlySavings * 0.90 && $availableMonthlySavings < $requiredMonthlySavings * 1.05) {
             return [
-                'status' => 'yellow',
-                'label' => 'Slightly Behind'
+                'status' => EnumGoalHealth::YELLOW->value,
+                'label' => EnumGoalHealthLabel::SLIGHTLY_BEHIND->value
             ];
         }
 
         return [
-            'status' => 'red',
-            'label' => 'At Risk'
+            'status' => EnumGoalHealth::RED->value,
+            'label' => EnumGoalHealthLabel::AT_RISK->value
         ];
     }
 }

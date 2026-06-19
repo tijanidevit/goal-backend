@@ -5,6 +5,8 @@ namespace App\Services;
 use App\Models\Goal;
 use Carbon\Carbon;
 
+use App\Enums\EnumGoalHealthLabel;
+
 class HealthEngine
 {
     private ForecastEngine $forecastEngine;
@@ -16,7 +18,6 @@ class HealthEngine
 
     /**
      * Determines the health status of a goal.
-     * Statuses: 'On Track', 'Behind', 'At Risk', 'No Plan', 'Achieved'
      *
      * @param Goal $goal
      * @return string
@@ -26,28 +27,28 @@ class HealthEngine
         $currentSavings = $goal->contributions()->sum('amount');
         
         if ($currentSavings >= $goal->target_amount) {
-            return 'Achieved';
+            return EnumGoalHealthLabel::ACHIEVED->value;
         }
 
         $estimatedDate = $this->forecastEngine->calculateEstimatedCompletionDate($goal);
 
         if (!$estimatedDate) {
-            return 'No Plan';
+            return EnumGoalHealthLabel::NO_PLAN->value;
         }
 
         $targetDate = Carbon::parse($goal->target_date)->startOfDay();
         $estimatedDate = $estimatedDate->copy()->startOfDay();
 
         if ($estimatedDate->lessThanOrEqualTo($targetDate)) {
-            return 'On Track';
+            return EnumGoalHealthLabel::ON_TRACK->value;
         }
 
         $monthsLate = $targetDate->diffInMonths($estimatedDate, false);
 
         if ($monthsLate > 3) {
-            return 'At Risk';
+            return EnumGoalHealthLabel::AT_RISK->value;
         }
 
-        return 'Behind';
+        return EnumGoalHealthLabel::BEHIND->value;
     }
 }

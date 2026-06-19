@@ -19,7 +19,7 @@ class HealthEngineTest extends TestCase
         $user = User::factory()->create();
         $goal = Goal::create([
             'user_id' => $user->id,
-            'category' => 'Test',
+            'category' => 'savings',
             'name' => 'Car',
             'target_amount' => 1000,
             'target_date' => now()->addMonths(12)->format('Y-m-d'),
@@ -44,7 +44,7 @@ class HealthEngineTest extends TestCase
         $user = User::factory()->create();
         $goal = Goal::create([
             'user_id' => $user->id,
-            'category' => 'Test',
+            'category' => 'savings',
             'name' => 'Car',
             'target_amount' => 1200,
             'target_date' => now()->addMonths(10)->format('Y-m-d'), // Target is 10 months away

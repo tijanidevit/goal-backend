@@ -19,7 +19,7 @@ class GoalFeatureTest extends TestCase
         $response = $this->withHeaders([
             'Authorization' => 'Bearer ' . $token,
         ])->postJson(route('goals.store'), [
-            'category' => 'Relocation',
+            'category' => 'travel',
             'name' => 'Move to Canada',
             'target_amount' => 10000000,
             'target_date' => now()->addYear()->format('Y-m-d'),
@@ -52,7 +52,7 @@ class GoalFeatureTest extends TestCase
 
         Goal::factory()->create([
             'user_id' => $user->id,
-            'category' => 'Test',
+            'category' => 'savings',
             'name' => 'My Goal',
             'target_amount' => 5000,
             'target_date' => now()->addMonth(),
@@ -74,7 +74,7 @@ class GoalFeatureTest extends TestCase
         $response = $this->withHeaders([
             'Authorization' => 'Bearer ' . $token,
         ])->postJson(route('goals.store'), [
-            'category' => 'Relocation',
+            'category' => 'travel',
             'name' => 'Past Goal',
             'target_amount' => 1000,
             'target_date' => now()->subDay()->format('Y-m-d'),
@@ -89,7 +89,7 @@ class GoalFeatureTest extends TestCase
         $owner = User::factory()->create();
         $goal = Goal::factory()->create([
             'user_id' => $owner->id,
-            'category' => 'Test',
+            'category' => 'savings',
             'name' => 'Private Goal',
             'target_amount' => 5000,
             'target_date' => now()->addMonth(),

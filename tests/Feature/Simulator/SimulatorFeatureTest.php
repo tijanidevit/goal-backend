@@ -18,7 +18,7 @@ class SimulatorFeatureTest extends TestCase
 
         $goal = Goal::factory()->create([
             'user_id' => $user->id,
-            'category' => 'Relocation',
+            'category' => 'travel',
             'name' => 'Move',
             'target_amount' => 12000,
             'target_date' => now()->addMonths(12)->format('Y-m-d'),

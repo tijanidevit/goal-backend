@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Enums\EnumContributionFrequency;
 use Illuminate\Database\Eloquent\Concerns\HasUuids;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
@@ -25,6 +26,7 @@ class GoalContributionPlan extends Model
             'amount' => 'decimal:2',
             'next_due_date' => 'date',
             'active' => 'boolean',
+            'frequency' => EnumContributionFrequency::class,
         ];
     }
 

@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers\Api;
 
+use App\Enums\EnumContributionFrequency;
+use App\Enums\EnumMonthlyReviewStatus;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
@@ -30,9 +32,9 @@ class MonthlyReviewController extends Controller
             
             $plannedThisMonth = 0;
             foreach ($goal->contributionPlans as $plan) {
-                if ($plan->frequency === 'monthly') {
+                if ($plan->frequency === EnumContributionFrequency::MONTHLY) {
                     $plannedThisMonth += $plan->amount;
-                } elseif ($plan->frequency === 'weekly') {
+                } elseif ($plan->frequency === EnumContributionFrequency::WEEKLY) {
                     $plannedThisMonth += $plan->amount * 4.33; 
                 }
             }
@@ -43,7 +45,7 @@ class MonthlyReviewController extends Controller
                 'planned_contribution' => round($plannedThisMonth, 2),
                 'actual_contribution' => round($totalContributedThisMonth, 2),
                 'difference' => round($totalContributedThisMonth - $plannedThisMonth, 2),
-                'status' => $totalContributedThisMonth >= $plannedThisMonth ? 'Met' : 'Missed',
+                'status' => $totalContributedThisMonth >= $plannedThisMonth ? EnumMonthlyReviewStatus::MET->value : EnumMonthlyReviewStatus::MISSED->value,
             ];
         });
 

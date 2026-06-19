@@ -19,7 +19,7 @@ class ContributionFeatureTest extends TestCase
 
         $goal = Goal::factory()->create([
             'user_id' => $user->id,
-            'category' => 'Relocation',
+            'category' => 'travel',
             'name' => 'Move',
             'target_amount' => 10000,
             'target_date' => now()->addYear(),

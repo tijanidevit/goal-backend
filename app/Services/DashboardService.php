@@ -4,6 +4,7 @@ namespace App\Services;
 
 use App\Models\Goal;
 use App\Models\FinancialProfile;
+use BackedEnum;
 use Carbon\Carbon;
 
 class DashboardService
@@ -49,7 +50,7 @@ class DashboardService
         return [
             'id' => $goal->id,
             'is_primary' => (bool)$goal->is_primary,
-            'category' => $goal->category,
+            'category' => $goal->category instanceof BackedEnum ? $goal->category->value : $goal->category,
             'name' => $goal->name,
             'goal_name' => $goal->name,
             'target_amount' => (float) $goal->target_amount,

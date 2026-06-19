@@ -18,7 +18,7 @@ class ForecastEngineTest extends TestCase
         $user = User::factory()->create();
         $goal = Goal::create([
             'user_id' => $user->id,
-            'category' => 'Test',
+            'category' => 'savings',
             'name' => 'Car',
             'target_amount' => 1000,
             'target_date' => now()->addMonths(10)->format('Y-m-d'),
@@ -44,7 +44,7 @@ class ForecastEngineTest extends TestCase
         $user = User::factory()->create();
         $goal = Goal::create([
             'user_id' => $user->id,
-            'category' => 'Test',
+            'category' => 'savings',
             'name' => 'Car',
             'target_amount' => 1000,
             'target_date' => now()->addMonths(10)->format('Y-m-d'),

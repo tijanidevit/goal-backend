@@ -5,6 +5,8 @@ namespace App\Services;
 use App\Models\Goal;
 use Carbon\Carbon;
 
+use App\Enums\EnumContributionFrequency;
+
 class ForecastEngine
 {
     /**
@@ -42,9 +44,9 @@ class ForecastEngine
         $totalMonthly = 0;
 
         foreach ($plans as $plan) {
-            if ($plan->frequency === 'monthly') {
+            if ($plan->frequency === EnumContributionFrequency::MONTHLY) {
                 $totalMonthly += $plan->amount;
-            } elseif ($plan->frequency === 'weekly') {
+            } elseif ($plan->frequency === EnumContributionFrequency::WEEKLY) {
                 $totalMonthly += $plan->amount * 4.33; // Approx weeks in a month
             }
         }
