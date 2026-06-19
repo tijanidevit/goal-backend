@@ -9,6 +9,7 @@ use App\Services\ForecastEngine;
 use App\Services\HealthEngine;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\TestCase;
+use App\Enums\EnumGoalHealthLabel;
 
 class HealthEngineTest extends TestCase
 {
@@ -36,7 +37,7 @@ class HealthEngineTest extends TestCase
         $engine = new HealthEngine(new ForecastEngine());
         $status = $engine->determineHealthStatus($goal);
 
-        $this->assertEquals('On Track', $status);
+        $this->assertEquals(EnumGoalHealthLabel::ON_TRACK->value, $status);
     }
 
     public function test_it_returns_behind_when_forecast_is_slightly_late()
@@ -61,6 +62,6 @@ class HealthEngineTest extends TestCase
         $engine = new HealthEngine(new ForecastEngine());
         $status = $engine->determineHealthStatus($goal);
 
-        $this->assertEquals('Behind', $status);
+        $this->assertEquals(EnumGoalHealthLabel::BEHIND->value, $status);
     }
 }
