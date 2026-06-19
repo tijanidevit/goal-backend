@@ -18,7 +18,7 @@ class DashboardFeatureTest extends TestCase
         $user = User::factory()->create();
         $token = $user->createToken('auth_token')->plainTextToken;
 
-        FinancialProfile::create([
+        FinancialProfile::factory()->create([
             'user_id' => $user->id,
             'total_monthly_income' => 5000,
             'total_monthly_expenses' => 2000,
@@ -26,7 +26,7 @@ class DashboardFeatureTest extends TestCase
             'available_monthly_savings' => 2500,
         ]);
 
-        $goal = Goal::create([
+        $goal = Goal::factory()->create([
             'user_id' => $user->id,
             'category' => 'Relocation',
             'name' => 'Move',
@@ -34,7 +34,7 @@ class DashboardFeatureTest extends TestCase
             'target_date' => now()->addMonths(10)->format('Y-m-d'),
         ]);
 
-        GoalContributionPlan::create([
+        GoalContributionPlan::factory()->create([
             'goal_id' => $goal->id,
             'amount' => 100,
             'frequency' => 'monthly',
@@ -62,17 +62,19 @@ class DashboardFeatureTest extends TestCase
                              'target_amount',
                              'target_date',
                              'current_savings',
-                             'intelligence' => [
-                                 'health_status',
-                                 'completion_probability',
+                             'goal_health' => [
+                                 'status',
+                                 'label',
                              ],
-                             'milestones',
+                             'current_milestone',
+                             'next_milestone',
+                             'amount_remaining_to_next_milestone',
+                             'if_you_continue_like_this'
                          ]
                      ]
                  ]);
 
-        // Health engine should say 'On Track', probability 100.
-        $this->assertEquals('On Track', $response->json('goals.0.intelligence.health_status'));
-        $this->assertEquals(100, $response->json('goals.0.intelligence.completion_probability'));
+        // Health engine should say 'On Track'.
+        $this->assertEquals('On Track', $response->json('goals.0.goal_health.label'));
     }
 }

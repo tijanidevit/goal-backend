@@ -16,7 +16,6 @@ class AuthFeatureTest extends TestCase
             'first_name' => 'John',
             'last_name' => 'Doe',
             'email' => 'john@example.com',
-            'phone' => '1234567890',
             'password' => 'password123',
         ]);
 
@@ -28,7 +27,6 @@ class AuthFeatureTest extends TestCase
                          'first_name',
                          'last_name',
                          'email',
-                         'phone',
                      ],
                      'token',
                  ]);
@@ -72,5 +70,38 @@ class AuthFeatureTest extends TestCase
 
         $response->assertStatus(200);
         $this->assertDatabaseCount('personal_access_tokens', 0);
+    }
+
+    public function test_user_cannot_register_with_duplicate_email(): void
+    {
+        User::factory()->create([
+            'email' => 'duplicate@example.com',
+        ]);
+
+        $response = $this->postJson(route('register'), [
+            'first_name' => 'John',
+            'last_name' => 'Doe',
+            'email' => 'duplicate@example.com',
+            'password' => 'password123',
+        ]);
+
+        $response->assertStatus(422)
+                 ->assertJsonValidationErrors(['email']);
+    }
+
+    public function test_user_cannot_login_with_invalid_credentials(): void
+    {
+        $user = User::factory()->create([
+            'email' => 'jane@example.com',
+            'password' => bcrypt('password123'),
+        ]);
+
+        $response = $this->postJson(route('login'), [
+            'email' => 'jane@example.com',
+            'password' => 'wrongpassword',
+        ]);
+
+        $response->assertStatus(422)
+                 ->assertJsonValidationErrors(['email']);
     }
 }

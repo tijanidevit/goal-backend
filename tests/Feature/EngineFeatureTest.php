@@ -20,7 +20,7 @@ class EngineFeatureTest extends TestCase
     {
         $user = User::factory()->create();
         
-        $profile = FinancialProfile::create([
+        $profile = FinancialProfile::factory()->create([
             'user_id' => $user->id,
             'total_monthly_income' => 5000,
             'total_monthly_expenses' => 2000,
@@ -28,7 +28,7 @@ class EngineFeatureTest extends TestCase
             // available = 2000
         ]);
 
-        $goal = Goal::create([
+        $goal = Goal::factory()->create([
             'user_id' => $user->id,
             'name' => 'Test Goal',
             'category' => 'savings',
@@ -39,7 +39,7 @@ class EngineFeatureTest extends TestCase
             'status' => 'active'
         ]);
 
-        GoalContribution::create([
+        GoalContribution::factory()->create([
             'goal_id' => $goal->id,
             'amount' => 4000,
             'contribution_date' => now(),
@@ -63,7 +63,7 @@ class EngineFeatureTest extends TestCase
     public function test_forecast_engine_target_date_already_passed()
     {
         $user = User::factory()->create();
-        $goal = Goal::create([
+        $goal = Goal::factory()->create([
             'user_id' => $user->id,
             'name' => 'Test Goal',
             'category' => 'savings',
@@ -84,7 +84,7 @@ class EngineFeatureTest extends TestCase
     public function test_forecast_engine_zero_contributions()
     {
         $user = User::factory()->create();
-        $goal = Goal::create([
+        $goal = Goal::factory()->create([
             'user_id' => $user->id,
             'name' => 'Test Goal',
             'category' => 'savings',
@@ -106,7 +106,7 @@ class EngineFeatureTest extends TestCase
     public function test_forecast_engine_goal_already_achieved()
     {
         $user = User::factory()->create();
-        $goal = Goal::create([
+        $goal = Goal::factory()->create([
             'user_id' => $user->id,
             'name' => 'Test Goal',
             'category' => 'savings',
@@ -117,7 +117,7 @@ class EngineFeatureTest extends TestCase
             'status' => 'active'
         ]);
 
-        GoalContribution::create([
+        GoalContribution::factory()->create([
             'goal_id' => $goal->id,
             'amount' => 12000, // exceeded
             'contribution_date' => now(),
@@ -175,14 +175,14 @@ class EngineFeatureTest extends TestCase
     {
         $user = User::factory()->create();
         
-        $profile = FinancialProfile::create([
+        $profile = FinancialProfile::factory()->create([
             'user_id' => $user->id,
             'total_monthly_income' => 2000,
             'total_monthly_expenses' => 3000,
             'total_monthly_debt_repayment' => 500,
         ]);
 
-        $goal = Goal::create([
+        $goal = Goal::factory()->create([
             'user_id' => $user->id,
             'name' => 'Test Goal',
             'category' => 'savings',

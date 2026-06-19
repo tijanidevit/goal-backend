@@ -23,7 +23,7 @@ class DashboardTest extends TestCase
     {
         $user = User::factory()->create();
         
-        $profile = FinancialProfile::create([
+        $profile = FinancialProfile::factory()->create([
             'user_id' => $user->id,
             'total_monthly_income' => 5000,
             'total_monthly_expenses' => 2000,
@@ -31,7 +31,7 @@ class DashboardTest extends TestCase
             // available automatically calculated as 2000
         ]);
 
-        $goal = Goal::create([
+        $goal = Goal::factory()->create([
             'user_id' => $user->id,
             'name' => 'Buy a House',
             'category' => 'savings',
@@ -43,7 +43,7 @@ class DashboardTest extends TestCase
             'created_at' => now()->subMonths(1),
         ]);
 
-        GoalContribution::create([
+        GoalContribution::factory()->create([
             'goal_id' => $goal->id,
             'amount' => 4000,
             'contribution_date' => now(),

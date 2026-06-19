@@ -17,7 +17,7 @@ class ContributionFeatureTest extends TestCase
         $user = User::factory()->create();
         $token = $user->createToken('auth_token')->plainTextToken;
 
-        $goal = Goal::create([
+        $goal = Goal::factory()->create([
             'user_id' => $user->id,
             'category' => 'Relocation',
             'name' => 'Move',
@@ -25,7 +25,7 @@ class ContributionFeatureTest extends TestCase
             'target_date' => now()->addYear(),
         ]);
 
-        $milestone = GoalMilestone::create([
+        $milestone = GoalMilestone::factory()->create([
             'goal_id' => $goal->id,
             'title' => '10% Achieved',
             'target_amount' => 1000,

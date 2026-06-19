@@ -16,7 +16,7 @@ class SimulatorFeatureTest extends TestCase
         $user = User::factory()->create();
         $token = $user->createToken('auth_token')->plainTextToken;
 
-        $goal = Goal::create([
+        $goal = Goal::factory()->create([
             'user_id' => $user->id,
             'category' => 'Relocation',
             'name' => 'Move',

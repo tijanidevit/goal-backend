@@ -46,7 +46,7 @@ class GoalFeatureTest extends TestCase
         $user = User::factory()->create();
         $token = $user->createToken('auth_token')->plainTextToken;
 
-        Goal::create([
+        Goal::factory()->create([
             'user_id' => $user->id,
             'category' => 'Test',
             'name' => 'My Goal',
@@ -60,5 +60,44 @@ class GoalFeatureTest extends TestCase
 
         $response->assertStatus(200)
                  ->assertJsonCount(1);
+    }
+
+    public function test_user_cannot_create_goal_with_past_date(): void
+    {
+        $user = User::factory()->create();
+        $token = $user->createToken('auth_token')->plainTextToken;
+
+        $response = $this->withHeaders([
+            'Authorization' => 'Bearer ' . $token,
+        ])->postJson(route('goals.store'), [
+            'category' => 'Relocation',
+            'name' => 'Past Goal',
+            'target_amount' => 1000,
+            'target_date' => now()->subDay()->format('Y-m-d'),
+        ]);
+
+        $response->assertStatus(422)
+                 ->assertJsonValidationErrors(['target_date']);
+    }
+
+    public function test_user_cannot_view_others_goal(): void
+    {
+        $owner = User::factory()->create();
+        $goal = Goal::factory()->create([
+            'user_id' => $owner->id,
+            'category' => 'Test',
+            'name' => 'Private Goal',
+            'target_amount' => 5000,
+            'target_date' => now()->addMonth(),
+        ]);
+
+        $otherUser = User::factory()->create();
+        $token = $otherUser->createToken('auth_token')->plainTextToken;
+
+        $response = $this->withHeaders([
+            'Authorization' => 'Bearer ' . $token,
+        ])->getJson(route('goals.show', $goal->id));
+
+        $response->assertStatus(403);
     }
 }

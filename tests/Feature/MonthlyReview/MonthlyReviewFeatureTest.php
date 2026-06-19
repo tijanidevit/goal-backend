@@ -18,7 +18,7 @@ class MonthlyReviewFeatureTest extends TestCase
         $user = User::factory()->create();
         $token = $user->createToken('auth_token')->plainTextToken;
 
-        $goal = Goal::create([
+        $goal = Goal::factory()->create([
             'user_id' => $user->id,
             'category' => 'Relocation',
             'name' => 'Move',
@@ -26,7 +26,7 @@ class MonthlyReviewFeatureTest extends TestCase
             'target_date' => now()->addMonths(12)->format('Y-m-d'),
         ]);
 
-        GoalContributionPlan::create([
+        GoalContributionPlan::factory()->create([
             'goal_id' => $goal->id,
             'amount' => 1000,
             'frequency' => 'monthly',
@@ -34,7 +34,7 @@ class MonthlyReviewFeatureTest extends TestCase
             'active' => true,
         ]);
 
-        GoalContribution::create([
+        GoalContribution::factory()->create([
             'goal_id' => $goal->id,
             'amount' => 1200,
             'contribution_date' => now()->startOfMonth(),
