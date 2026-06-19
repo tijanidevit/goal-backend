@@ -33,8 +33,8 @@ class SelectionController extends Controller
         $categories = $this->formatEnum(EnumGoalCategory::cases());
 
         return $this->successResponse(
-            $categories,
-            'Goal categories fetched successfully'
+            'Goal categories fetched successfully',
+            $categories
         );
     }
 }
