@@ -1,0 +1,78 @@
+<?php
+
+namespace Tests\Feature\Dashboard;
+
+use App\Models\FinancialProfile;
+use App\Models\Goal;
+use App\Models\GoalContributionPlan;
+use App\Models\User;
+use Illuminate\Foundation\Testing\RefreshDatabase;
+use Tests\TestCase;
+
+class DashboardFeatureTest extends TestCase
+{
+    use RefreshDatabase;
+
+    public function test_user_can_view_dashboard_with_financial_summary_and_enriched_goals(): void
+    {
+        $user = User::factory()->create();
+        $token = $user->createToken('auth_token')->plainTextToken;
+
+        FinancialProfile::create([
+            'user_id' => $user->id,
+            'total_monthly_income' => 5000,
+            'total_monthly_expenses' => 2000,
+            'total_monthly_debt_repayment' => 500,
+            'available_monthly_savings' => 2500,
+        ]);
+
+        $goal = Goal::create([
+            'user_id' => $user->id,
+            'category' => 'Relocation',
+            'name' => 'Move',
+            'target_amount' => 1000,
+            'target_date' => now()->addMonths(10)->format('Y-m-d'),
+        ]);
+
+        GoalContributionPlan::create([
+            'goal_id' => $goal->id,
+            'amount' => 100,
+            'frequency' => 'monthly',
+            'next_due_date' => now(),
+            'active' => true,
+        ]);
+
+        $response = $this->withHeaders([
+            'Authorization' => 'Bearer ' . $token,
+        ])->getJson(route('dashboard'));
+
+        $response->assertStatus(200)
+                 ->assertJsonStructure([
+                     'financial_summary' => [
+                         'total_income',
+                         'total_expenses',
+                         'total_debt_repayment',
+                         'available_savings',
+                     ],
+                     'goals' => [
+                         '*' => [
+                             'id',
+                             'name',
+                             'category',
+                             'target_amount',
+                             'target_date',
+                             'current_savings',
+                             'intelligence' => [
+                                 'health_status',
+                                 'completion_probability',
+                             ],
+                             'milestones',
+                         ]
+                     ]
+                 ]);
+
+        // Health engine should say 'On Track', probability 100.
+        $this->assertEquals('On Track', $response->json('goals.0.intelligence.health_status'));
+        $this->assertEquals(100, $response->json('goals.0.intelligence.completion_probability'));
+    }
+}
