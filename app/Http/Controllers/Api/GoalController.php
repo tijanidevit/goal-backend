@@ -16,7 +16,7 @@ class GoalController extends Controller
     public function index(Request $request): JsonResponse
     {
         $goals = $request->user()->goals()->with(['contributions', 'milestones'])->get();
-        return response()->json($goals);
+        return $this->successResponse('Goals retrieved successfully', $goals);
     }
 
     public function store(StoreGoalRequest $request): JsonResponse
@@ -30,13 +30,13 @@ class GoalController extends Controller
 
         $this->generateMilestones($goal);
 
-        return response()->json($goal->load('milestones'), 201);
+        return $this->createdResponse('Goal created successfully', $goal->load('milestones'));
     }
 
     public function show(Request $request, Goal $goal, DashboardService $dashboardService): JsonResponse
     {
         if ($goal->user_id !== $request->user()->id) {
-            return response()->json(['message' => 'Unauthorized'], 403);
+            return $this->unauthorizedResponse();
         }
 
         $goal->load(['contributions', 'milestones', 'contributionPlans']);
@@ -53,41 +53,41 @@ class GoalController extends Controller
             'timeline' => $insights['timeline']
         ]);
 
-        return response()->json($goalData);
+        return $this->successResponse('Goal retrieved successfully', $goalData);
     }
 
     public function update(UpdateGoalRequest $request, Goal $goal): JsonResponse
     {
         if ($goal->user_id !== $request->user()->id) {
-            return response()->json(['message' => 'Unauthorized'], 403);
+            return $this->unauthorizedResponse();
         }
 
         $goal->update($request->validated());
 
-        return response()->json($goal);
+        return $this->successResponse('Goal updated successfully', $goal);
     }
 
     public function destroy(Request $request, Goal $goal): JsonResponse
     {
         if ($goal->user_id !== $request->user()->id) {
-            return response()->json(['message' => 'Unauthorized'], 403);
+            return $this->unauthorizedResponse();
         }
 
         $goal->delete();
 
-        return response()->json(null, 204);
+        return $this->successMessageResponse('Goal deleted successfully');
     }
 
     public function setPrimary(Request $request, Goal $goal): JsonResponse
     {
         if ($goal->user_id !== $request->user()->id) {
-            return response()->json(['message' => 'Unauthorized'], 403);
+            return $this->unauthorizedResponse();
         }
 
         $request->user()->goals()->update(['is_primary' => false]);
         $goal->update(['is_primary' => true]);
 
-        return response()->json($goal->load(['contributions', 'milestones', 'contributionPlans']));
+        return $this->successResponse('Goal set as primary successfully', $goal->load(['contributions', 'milestones', 'contributionPlans']));
     }
 
     private function generateMilestones(Goal $goal): void

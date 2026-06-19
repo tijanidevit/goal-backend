@@ -21,14 +21,17 @@ class AuthFeatureTest extends TestCase
 
         $response->assertStatus(201)
                  ->assertJsonStructure([
+                     'success',
                      'message',
-                     'user' => [
-                         'id',
-                         'first_name',
-                         'last_name',
-                         'email',
-                     ],
-                     'token',
+                     'data' => [
+                         'user' => [
+                             'id',
+                             'first_name',
+                             'last_name',
+                             'email',
+                         ],
+                         'token',
+                     ]
                  ]);
 
         $this->assertDatabaseHas('users', [
@@ -50,12 +53,15 @@ class AuthFeatureTest extends TestCase
 
         $response->assertStatus(200)
                  ->assertJsonStructure([
+                     'success',
                      'message',
-                     'user' => [
-                         'id',
-                         'email',
-                     ],
-                     'token',
+                     'data' => [
+                         'user' => [
+                             'id',
+                             'email',
+                         ],
+                         'token',
+                     ]
                  ]);
     }
 

@@ -32,8 +32,10 @@ class SimulatorFeatureTest extends TestCase
 
         $response->assertStatus(200)
                  ->assertJson([
-                     'proposed_monthly_contribution' => 1000,
-                     'months_left' => 12,
+                     'data' => [
+                         'proposed_monthly_contribution' => 1000,
+                         'months_left' => 12,
+                     ]
                  ]);
     }
 }

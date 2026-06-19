@@ -45,9 +45,9 @@ class MonthlyReviewFeatureTest extends TestCase
         ])->getJson(route('monthly-review', ['month' => now()->format('m'), 'year' => now()->format('Y')]));
 
         $response->assertStatus(200)
-                 ->assertJsonPath('goals_review.0.status', 'Met')
-                 ->assertJsonPath('goals_review.0.planned_contribution', 1000)
-                 ->assertJsonPath('goals_review.0.actual_contribution', 1200)
-                 ->assertJsonPath('goals_review.0.difference', 200);
+                 ->assertJsonPath('data.goals_review.0.status', 'Met')
+                 ->assertJsonPath('data.goals_review.0.planned_contribution', 1000)
+                 ->assertJsonPath('data.goals_review.0.actual_contribution', 1200)
+                 ->assertJsonPath('data.goals_review.0.difference', 200);
     }
 }

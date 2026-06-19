@@ -48,33 +48,38 @@ class DashboardFeatureTest extends TestCase
 
         $response->assertStatus(200)
                  ->assertJsonStructure([
-                     'financial_summary' => [
-                         'total_income',
-                         'total_expenses',
-                         'total_debt_repayment',
-                         'available_savings',
-                     ],
-                     'goals' => [
-                         '*' => [
-                             'id',
-                             'name',
-                             'category',
-                             'target_amount',
-                             'target_date',
-                             'current_savings',
-                             'goal_health' => [
-                                 'status',
-                                 'label',
-                             ],
-                             'current_milestone',
-                             'next_milestone',
-                             'amount_remaining_to_next_milestone',
-                             'if_you_continue_like_this'
+                     'success',
+                     'message',
+                     'data' => [
+                         'user',
+                         'financial_summary' => [
+                             'total_income',
+                             'total_expenses',
+                             'total_debt_repayment',
+                             'available_savings',
+                         ],
+                         'goals' => [
+                             '*' => [
+                                 'id',
+                                 'name',
+                                 'category',
+                                 'target_amount',
+                                 'target_date',
+                                 'current_savings',
+                                 'goal_health' => [
+                                     'status',
+                                     'label',
+                                 ],
+                                 'current_milestone',
+                                 'next_milestone',
+                                 'amount_remaining_to_next_milestone',
+                                 'if_you_continue_like_this'
+                             ]
                          ]
                      ]
                  ]);
 
         // Health engine should say 'On Track'.
-        $this->assertEquals('On Track', $response->json('goals.0.goal_health.label'));
+        $this->assertEquals('On Track', $response->json('data.goals.0.goal_health.label'));
     }
 }

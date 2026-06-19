@@ -40,7 +40,7 @@ class DashboardController extends Controller
             return $this->dashboardService->generateGoalDashboard($goal, $financialProfile);
         });
 
-        return response()->json([
+        return $this->successResponse('Dashboard retrieved successfully', [
             'user' => $user->only(['id', 'first_name', 'last_name', 'email']),
             'financial_summary' => $financialSummary,
             'goals' => DashboardResource::collection($dashboardPayloads),

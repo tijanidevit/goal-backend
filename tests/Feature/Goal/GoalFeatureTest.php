@@ -27,10 +27,14 @@ class GoalFeatureTest extends TestCase
 
         $response->assertStatus(201)
                  ->assertJsonStructure([
-                     'id',
-                     'name',
-                     'milestones' => [
-                         '*' => ['id', 'title', 'target_amount']
+                     'success',
+                     'message',
+                     'data' => [
+                         'id',
+                         'name',
+                         'milestones' => [
+                             '*' => ['id', 'title', 'target_amount']
+                         ]
                      ]
                  ]);
 
@@ -59,7 +63,7 @@ class GoalFeatureTest extends TestCase
         ])->getJson(route('goals.index'));
 
         $response->assertStatus(200)
-                 ->assertJsonCount(1);
+                 ->assertJsonCount(1, 'data');
     }
 
     public function test_user_cannot_create_goal_with_past_date(): void

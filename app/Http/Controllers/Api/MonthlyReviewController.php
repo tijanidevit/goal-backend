@@ -47,7 +47,7 @@ class MonthlyReviewController extends Controller
             ];
         });
 
-        return response()->json([
+        return $this->successResponse('Monthly review retrieved successfully', [
             'month' => $month,
             'year' => $year,
             'goals_review' => $review,

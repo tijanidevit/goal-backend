@@ -16,16 +16,16 @@ class FinancialProfileController extends Controller
         $profile = $request->user()->financialProfile()->with(['incomeSources', 'expenseCategories', 'debts'])->first();
         
         if (!$profile) {
-            return response()->json(['message' => 'Profile not found'], 404);
+            return $this->notFoundResponse('Profile not found');
         }
 
-        return response()->json($profile);
+        return $this->successResponse('Profile retrieved successfully', $profile);
     }
 
     public function store(StoreFinancialProfileRequest $request): JsonResponse
     {
         if ($request->user()->financialProfile) {
-            return response()->json(['message' => 'Profile already exists'], 409);
+            return $this->errorResponse('Profile already exists', [], 409);
         }
 
         $validated = $request->validated();
@@ -50,7 +50,7 @@ class FinancialProfileController extends Controller
             $profile->debts()->createMany($validated['debts']);
         }
 
-        return response()->json($profile->load(['incomeSources', 'expenseCategories', 'debts']), 201);
+        return $this->createdResponse('Profile created successfully', $profile->load(['incomeSources', 'expenseCategories', 'debts']));
     }
 
     public function update(UpdateFinancialProfileRequest $request): JsonResponse
@@ -58,7 +58,7 @@ class FinancialProfileController extends Controller
         $profile = $request->user()->financialProfile;
 
         if (!$profile) {
-            return response()->json(['message' => 'Profile not found'], 404);
+            return $this->notFoundResponse('Profile not found');
         }
 
         $validated = $request->validated();
@@ -89,6 +89,6 @@ class FinancialProfileController extends Controller
             $profile->debts()->createMany($validated['debts']);
         }
 
-        return response()->json($profile->load(['incomeSources', 'expenseCategories', 'debts']));
+        return $this->successResponse('Profile updated successfully', $profile->load(['incomeSources', 'expenseCategories', 'debts']));
     }
 }

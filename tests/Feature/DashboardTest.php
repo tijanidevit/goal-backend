@@ -53,52 +53,56 @@ class DashboardTest extends TestCase
         
         $response->assertStatus(200);
         $response->assertJsonStructure([
-            'user',
-            'financial_summary' => [
-                'total_income',
-                'total_expenses',
-                'total_debt_repayment',
-                'available_savings'
-            ],
-            'goals' => [
-                '*' => [
-                    'id',
-                    'is_primary',
-                    'category',
-                    'name',
-                    'goal_name',
-                    'target_amount',
-                    'target_date',
-                    'current_savings',
-                    'remaining_amount',
-                    'progress_percentage',
-                    'available_monthly_savings',
-                    'required_monthly_savings',
-                    'projected_completion_date',
-                    'goal_health' => [
-                        'status',
-                        'label'
-                    ],
-                    'current_milestone',
-                    'next_milestone',
-                    'amount_remaining_to_next_milestone',
-                    'timeline' => [
-                        'start_date',
+            'success',
+            'message',
+            'data' => [
+                'user',
+                'financial_summary' => [
+                    'total_income',
+                    'total_expenses',
+                    'total_debt_repayment',
+                    'available_savings'
+                ],
+                'goals' => [
+                    '*' => [
+                        'id',
+                        'is_primary',
+                        'category',
+                        'name',
+                        'goal_name',
+                        'target_amount',
                         'target_date',
-                        'months_elapsed',
-                        'total_months'
-                    ],
-                    'if_you_continue_like_this' => [
-                        'current_pace',
+                        'current_savings',
+                        'remaining_amount',
+                        'progress_percentage',
+                        'available_monthly_savings',
+                        'required_monthly_savings',
                         'projected_completion_date',
-                        'target_date',
-                        'status'
+                        'goal_health' => [
+                            'status',
+                            'label'
+                        ],
+                        'current_milestone',
+                        'next_milestone',
+                        'amount_remaining_to_next_milestone',
+                        'timeline' => [
+                            'start_date',
+                            'target_date',
+                            'months_elapsed',
+                            'total_months'
+                        ],
+                        'if_you_continue_like_this' => [
+                            'current_pace',
+                            'projected_completion_date',
+                            'target_date',
+                            'status'
+                        ]
                     ]
                 ]
             ]
         ]);
 
-        $data = $response->json('goals.0');
+        $data = $response->json('data.goals.0');
         $this->assertEquals('Buy a House', $data['goal_name']);
         $this->assertEquals(10000, $data['target_amount']);
         $this->assertEquals(4000, $data['current_savings']);

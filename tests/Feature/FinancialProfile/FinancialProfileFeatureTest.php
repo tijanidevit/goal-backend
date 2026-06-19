@@ -35,10 +35,10 @@ class FinancialProfileFeatureTest extends TestCase
         ]);
 
         $response->assertStatus(201)
-                 ->assertJsonPath('available_monthly_savings', "2500.00")
-                 ->assertJsonCount(1, 'income_sources')
-                 ->assertJsonCount(2, 'expense_categories')
-                 ->assertJsonCount(1, 'debts');
+                 ->assertJsonPath('data.available_monthly_savings', "2500.00")
+                 ->assertJsonCount(1, 'data.income_sources')
+                 ->assertJsonCount(2, 'data.expense_categories')
+                 ->assertJsonCount(1, 'data.debts');
 
         $this->assertDatabaseHas('financial_profiles', [
             'user_id' => $user->id,

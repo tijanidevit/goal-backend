@@ -14,16 +14,16 @@ class GoalContributionController extends Controller
     public function index(Goal $goal): JsonResponse
     {
         if ($goal->user_id !== request()->user()->id) {
-            return response()->json(['message' => 'Unauthorized'], 403);
+            return $this->unauthorizedResponse();
         }
 
-        return response()->json($goal->contributions);
+        return $this->successResponse('Contributions retrieved successfully', $goal->contributions);
     }
 
     public function store(StoreContributionRequest $request, Goal $goal): JsonResponse
     {
         if ($goal->user_id !== $request->user()->id) {
-            return response()->json(['message' => 'Unauthorized'], 403);
+            return $this->unauthorizedResponse();
         }
 
         $validated = $request->validated();
@@ -32,11 +32,8 @@ class GoalContributionController extends Controller
         
         if ($currentSavings + $newAmount > $goal->target_amount) {
             $remaining = max(0, $goal->target_amount - $currentSavings);
-            return response()->json([
-                'message' => 'The given data was invalid.',
-                'errors' => [
-                    'amount' => ["This contribution exceeds your remaining target amount of {$remaining}."]
-                ]
+            return $this->errorResponse('The given data was invalid.', [
+                'amount' => ["This contribution exceeds your remaining target amount of {$remaining}."]
             ], 422);
         }
 
@@ -44,7 +41,7 @@ class GoalContributionController extends Controller
 
         $this->checkMilestones($goal);
 
-        return response()->json($contribution, 201);
+        return $this->createdResponse('Contribution created successfully', $contribution);
     }
 
     public function update(UpdateContributionRequest $request, GoalContribution $contribution): JsonResponse
@@ -52,14 +49,14 @@ class GoalContributionController extends Controller
         $goal = $contribution->goal;
         
         if ($goal->user_id !== $request->user()->id) {
-            return response()->json(['message' => 'Unauthorized'], 403);
+            return $this->unauthorizedResponse();
         }
 
         $contribution->update($request->validated());
 
         $this->checkMilestones($goal);
 
-        return response()->json($contribution);
+        return $this->successResponse('Contribution updated successfully', $contribution);
     }
 
     public function destroy(GoalContribution $contribution): JsonResponse
@@ -67,12 +64,12 @@ class GoalContributionController extends Controller
         $goal = $contribution->goal;
         
         if ($goal->user_id !== request()->user()->id) {
-            return response()->json(['message' => 'Unauthorized'], 403);
+            return $this->unauthorizedResponse();
         }
 
         $contribution->delete();
 
-        return response()->json(null, 204);
+        return $this->successMessageResponse('Contribution deleted successfully');
     }
 
     private function checkMilestones(Goal $goal): void

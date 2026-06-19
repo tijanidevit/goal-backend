@@ -12,7 +12,7 @@ class SimulatorController extends Controller
     public function simulate(Request $request, Goal $goal): JsonResponse
     {
         if ($goal->user_id !== $request->user()->id) {
-            return response()->json(['message' => 'Unauthorized'], 403);
+            return $this->unauthorizedResponse();
         }
 
         $request->validate([
@@ -25,8 +25,7 @@ class SimulatorController extends Controller
         $remainingAmount = $goal->target_amount - $currentSavings;
 
         if ($remainingAmount <= 0) {
-            return response()->json([
-                'message' => 'Goal is already achieved.',
+            return $this->successResponse('Goal is already achieved.', [
                 'estimated_completion_date' => now()->format('Y-m-d'),
                 'months_left' => 0,
             ]);
@@ -35,7 +34,7 @@ class SimulatorController extends Controller
         $monthsLeft = ceil($remainingAmount / $proposedAmount);
         $estimatedDate = now()->addMonths((int) $monthsLeft);
 
-        return response()->json([
+        return $this->successResponse('Simulation complete', [
             'proposed_monthly_contribution' => $proposedAmount,
             'estimated_completion_date' => $estimatedDate->format('Y-m-d'),
             'months_left' => $monthsLeft,
