@@ -170,4 +170,65 @@ class EngineFeatureTest extends TestCase
         $this->assertNull($resultAchieved['next_milestone']);
         $this->assertEquals(0, $resultAchieved['amount_remaining_to_next_milestone']);
     }
+
+    public function test_forecast_engine_negative_available_savings()
+    {
+        $user = User::factory()->create();
+        
+        $profile = FinancialProfile::create([
+            'user_id' => $user->id,
+            'total_monthly_income' => 2000,
+            'total_monthly_expenses' => 3000,
+            'total_monthly_debt_repayment' => 500,
+        ]);
+
+        $goal = Goal::create([
+            'user_id' => $user->id,
+            'name' => 'Test Goal',
+            'category' => 'savings',
+            'target_amount' => 10000,
+            'target_date' => now()->addMonths(5),
+            'currency_code' => 'NGN',
+            'is_primary' => false,
+            'status' => 'active'
+        ]);
+
+        $service = new ForecastEngineService();
+        $result = $service->forecast($goal, $profile);
+
+        $this->assertNull($result['projected_completion_date']);
+        $this->assertEquals(0, $result['current_pace']);
+    }
+
+    public function test_health_engine_negative_pace()
+    {
+        $service = new GoalHealthService();
+
+        $result = $service->calculateHealth(1000, -500);
+        $this->assertEquals('red', $result['status']);
+    }
+
+    public function test_milestone_engine_zero_target()
+    {
+        $service = new MilestoneEngineService();
+
+        $result = $service->calculateMilestones(1000, 0);
+        
+        $this->assertEquals(100, $result['current_progress_percentage']);
+        $this->assertEquals(100, $result['current_milestone']);
+        $this->assertNull($result['next_milestone']);
+        $this->assertEquals(0, $result['amount_remaining_to_next_milestone']);
+    }
+
+    public function test_milestone_engine_negative_savings()
+    {
+        $service = new MilestoneEngineService();
+
+        $result = $service->calculateMilestones(-500, 10000);
+        
+        $this->assertEquals(0, $result['current_progress_percentage']);
+        $this->assertEquals(0, $result['current_milestone']);
+        $this->assertEquals(10, $result['next_milestone']);
+        $this->assertEquals(1500, $result['amount_remaining_to_next_milestone']);
+    }
 }
